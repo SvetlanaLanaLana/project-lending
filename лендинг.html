@@ -9,6 +9,66 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
+<script>
+(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+        document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+})();
+</script>
+<style>
+html[data-theme="dark"] {
+    --bg: #0d1020;
+    --surface: rgba(23, 27, 48, 0.7);
+    --surface-solid: #151a32;
+    --text: #eceffd;
+    --muted: #b8bddb;
+    --shadow-soft: 0 10px 30px rgba(3, 6, 20, 0.45);
+    --shadow-hover: 0 22px 42px rgba(1, 4, 16, 0.6);
+}
+
+html[data-theme="dark"] .section-soft {
+    background: linear-gradient(180deg, rgba(20, 24, 44, 0.8), rgba(15, 18, 34, 0.86));
+}
+
+html[data-theme="dark"] .hero::after {
+    background: linear-gradient(0deg, rgba(13, 16, 32, 1), rgba(13, 16, 32, 0));
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .review,
+html[data-theme="dark"] .checks li {
+    border-color: rgba(163, 173, 255, 0.2);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.theme-toggle {
+    min-width: 118px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    color: #fff;
+}
+
+.theme-toggle:hover {
+    opacity: 0.92;
+}
+
+@media (max-width: 640px) {
+    .nav-actions {
+        gap: 0.45rem;
+    }
+
+    .theme-toggle {
+        min-width: auto;
+        padding: 9px 14px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -21,7 +81,10 @@
             <li><a href="#reviews">Отзывы</a></li>
             <li><a href="#contacts">Контакты</a></li>
         </ul>
-        <a href="#contacts" class="btn btn-small">Записаться</a>
+        <div class="nav-actions">
+            <button type="button" class="btn btn-small theme-toggle" id="themeToggle" aria-label="Переключить тему">Тёмная тема</button>
+            <a href="#contacts" class="btn btn-small">Записаться</a>
+        </div>
     </nav>
 </header>
 
@@ -106,5 +169,28 @@
 </section>
 
 <script src="./script.js"></script>
+<script>
+const themeToggleButton = document.getElementById("themeToggle");
+const rootElement = document.documentElement;
+const themeLabelByValue = {
+    light: "Тёмная тема",
+    dark: "Светлая тема",
+};
+
+const getCurrentTheme = () => rootElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+
+const updateThemeButtonText = (theme) => {
+    themeToggleButton.textContent = themeLabelByValue[theme];
+};
+
+updateThemeButtonText(getCurrentTheme());
+
+themeToggleButton.addEventListener("click", () => {
+    const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
+    rootElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("theme", nextTheme);
+    updateThemeButtonText(nextTheme);
+});
+</script>
 </body>
 </html>
